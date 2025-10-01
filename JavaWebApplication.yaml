@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-deployment
+  namespace: production
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      application: java
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 30
+  template:
+    metadata:
+      name: java-pod
+      labels:
+        application: java
+    spec:
+      containers:
+      - name: java-container
+        image: mithuntechnologies/java-web-application:1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-service
+  namespace: production
+spec:
+  type: LoadBalancer
+  selector:
+    application: java
+  ports:
+  - port: 80
+    targetPort: 8080

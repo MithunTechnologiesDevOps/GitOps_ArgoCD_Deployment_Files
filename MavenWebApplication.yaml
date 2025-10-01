@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webpage-deployment
+  name: maven-deployment
   namespace: production
 spec:
   replicas: 2
   revisionHistoryLimit: 5
   selector:
     matchLabels:
-      application: webpage
+      application: maven
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,13 +17,26 @@ spec:
   minReadySeconds: 30
   template:
     metadata:
-      name: webpage-pod
+      name: maven-pod
       labels:
-        application: webpage
+        application: maven
     spec:
       containers:
-      - name: webpage-container
+      - name: maven-container
         image: mithuntechnologies/maven-web-application:1
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: maven-service
+  namespace: production
+spec:
+  type: LoadBalancer
+  selector:
+    application: maven
+  ports:
+  - port: 80
+    targetPort: 8080
