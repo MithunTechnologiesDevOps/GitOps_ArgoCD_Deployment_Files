@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: maven-container
-        image: mithuntechnologies/maven-web-application:1
+        image: mithuntechnologies/maven-web-application:2
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
